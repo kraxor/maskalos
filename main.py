@@ -10,6 +10,7 @@ screen_dimensions = (960, 540)
 frame_rate = 60 # FPS (frames per second)
 character_width = 40
 character_height = 40
+interact_distance = 70
 
 # create screen
 window = pygame.display.set_mode(screen_dimensions)
@@ -43,6 +44,15 @@ while running:
         player_x = player_x - speed
     elif keys[pygame.K_d]:
         player_x = player_x + speed
+
+    if keys[pygame.K_e]:
+        distance_x = abs(player_x - npc_x)
+        distance_y = abs(player_y - npc_y)
+        if distance_x <= interact_distance and distance_y <= interact_distance:
+            print("interacting!")
+        else:
+            print("too far away, can not interact")
+            print("distance = (%f, %f)" % (distance_x, distance_y))
 
     # print("player location: %f,%f" % (player_x, player_y))
 
