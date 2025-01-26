@@ -30,10 +30,18 @@ while running:
     # handle key presses
     keys = pygame.key.get_pressed()
     if keys[pygame.K_w]:
-        player_y -= speed
+        player_y = player_y - speed
+    elif keys[pygame.K_s]:
+        player_y = player_y + speed
+    if keys[pygame.K_a]:
+        player_x = player_x - speed
+    elif keys[pygame.K_d]:
+        player_x = player_x + speed
+
+    print("player location: %f,%f" % (player_x, player_y))
 
     # create player rect
-    player_rect = pygame.Rect(player_x, player_y, 10, 10)
+    player_rect = pygame.Rect(player_x, player_y, 40, 40)
 
     # clear screen
     window.fill(pygame.Color(0, 0, 0))
