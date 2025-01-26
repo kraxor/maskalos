@@ -3,19 +3,21 @@ import time
 
 pygame.init()
 
-window = pygame.display.set_mode((960, 540))
+screen_dimensions = (960, 540)
+window = pygame.display.set_mode(screen_dimensions)
+
+player = pygame.Rect(screen_dimensions[0] / 2, screen_dimensions[1] / 2, 10, 10)
+player_color = pygame.Color(255, 0, 0)
 
 running = True
 while running:
-    print("tick start")
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             print("QUIT event received, leaving game loop...")
             running = False
 
-    print("tick end")
-    time.sleep(1)
+    pygame.draw.rect(window, player_color, player)
+    pygame.display.flip()
 
 print("Cleaning up...")
 pygame.quit()
