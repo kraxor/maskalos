@@ -74,8 +74,20 @@ while running:
     pygame.draw.rect(window_surface, npc_color, npc_rect)
 
     if is_interacting:
+        text_offset_x = npc_x - 50
+        text_offset_y = npc_y - 100
+        # draw text
         text_surface = font.render("Mountains are nice!", 0, text_color)
-        window_surface.blit(text_surface, (npc_x - 50, npc_y - 100))
+        window_surface.blit(text_surface, (text_offset_x, text_offset_y))
+
+        # draw bubble around the text
+        text_rect = text_surface.get_rect()
+        horizontal_padding = 20
+        text_rect.width += horizontal_padding
+        text_rect.x = text_offset_x - int(horizontal_padding / 2)
+        text_rect.y = text_offset_y
+
+        pygame.draw.rect(window_surface, text_color, text_rect, 2, 20)
 
     # flip display (apply changes)
     pygame.display.flip()
