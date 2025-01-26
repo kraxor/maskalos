@@ -6,14 +6,18 @@ pygame.init()
 speed = 2
 player_color = pygame.Color(255, 0, 0)
 npc_color = pygame.Color(0, 0, 255)
+text_color = pygame.Color(230, 230, 230)
 screen_dimensions = (960, 540)
 frame_rate = 60 # FPS (frames per second)
 character_width = 40
 character_height = 40
 interact_distance = 70
 
+# load fonts
+font = pygame.font.Font("CollegeBlock.ttf", size=32)
+
 # create screen
-window = pygame.display.set_mode(screen_dimensions)
+window_surface = pygame.display.set_mode(screen_dimensions)
 
 # create clock
 clock = pygame.time.Clock()
@@ -27,12 +31,25 @@ npc_x = 200
 npc_y = 200
 
 running = True
+is_interacting = False
 while running:
     # handle events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             print("QUIT event received, leaving game loop...")
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_e:
+                distance_x = abs(player_x - npc_x)
+                distance_y = abs(player_y - npc_y)
+                if distance_x <= interact_distance and distance_y <= interact_distance:
+                    if is_interacting:
+                        is_interacting = False
+                    else:
+                        is_interacting = True
+                else:
+                    print("too far away, can not interact")
+                    print("distance = (%f, %f)" % (distance_x, distance_y))
 
     # handle key presses
     keys = pygame.key.get_pressed()
@@ -45,27 +62,20 @@ while running:
     elif keys[pygame.K_d]:
         player_x = player_x + speed
 
-    if keys[pygame.K_e]:
-        distance_x = abs(player_x - npc_x)
-        distance_y = abs(player_y - npc_y)
-        if distance_x <= interact_distance and distance_y <= interact_distance:
-            print("interacting!")
-        else:
-            print("too far away, can not interact")
-            print("distance = (%f, %f)" % (distance_x, distance_y))
-
-    # print("player location: %f,%f" % (player_x, player_y))
-
     # create rects for characters
     player_rect = pygame.Rect(player_x, player_y, character_width, character_height)
     npc_rect = pygame.Rect(npc_x, npc_y, character_width, character_height)
 
     # clear screen
-    window.fill(pygame.Color(0, 0, 0))
+    window_surface.fill(pygame.Color(0, 0, 0))
 
     # draw character rects
-    pygame.draw.rect(window, player_color, player_rect)
-    pygame.draw.rect(window, npc_color, npc_rect)
+    pygame.draw.rect(window_surface, player_color, player_rect)
+    pygame.draw.rect(window_surface, npc_color, npc_rect)
+
+    if is_interacting:
+        text_surface = font.render("Mountains are nice!", 0, text_color)
+        window_surface.blit(text_surface, (npc_x - 50, npc_y - 100))
 
     # flip display (apply changes)
     pygame.display.flip()
