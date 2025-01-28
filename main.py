@@ -32,6 +32,8 @@ npc_y = 200
 
 running = True
 is_interacting = False
+text_rect=None
+flag=False
 while running:
     # handle events
     for event in pygame.event.get():
@@ -39,6 +41,7 @@ while running:
             print("QUIT event received, leaving game loop...")
             running = False
         if event.type == pygame.KEYDOWN:
+            
             if event.key == pygame.K_e:
                 distance_x = abs(player_x - npc_x)
                 distance_y = abs(player_y - npc_y)
@@ -66,6 +69,13 @@ while running:
     player_rect = pygame.Rect(player_x, player_y, character_width, character_height)
     npc_rect = pygame.Rect(npc_x, npc_y, character_width, character_height)
 
+    ''' 
+        Keep track of distance between the player and npc in real time will make it easy to find when the playe is near
+        and when far away
+    '''
+    distance_x = abs(player_rect.x - npc_rect.x)
+    distance_y = abs(player_rect.y - npc_rect.y)
+
     # clear screen
     window_surface.fill(pygame.Color(0, 0, 0))
 
@@ -73,7 +83,12 @@ while running:
     pygame.draw.rect(window_surface, player_color, player_rect)
     pygame.draw.rect(window_surface, npc_color, npc_rect)
 
-    if is_interacting:
+
+    '''
+        Instead of just checking for if interacting we can also use the real time distance we calculated to find whether 
+        actor/player is within interaction range or not.
+    '''
+    if is_interacting and distance_x <= interact_distance and distance_x <= interact_distance:
         text_offset_x = npc_x - 50
         text_offset_y = npc_y - 100
         # draw text
@@ -88,6 +103,17 @@ while running:
         text_rect.y = text_offset_y
 
         pygame.draw.rect(window_surface, text_color, text_rect, 2, 20)
+
+    
+    else:
+        '''
+            If the actor/player is not in range we just set interacting to false which previously only happended
+            when thr key 'e' was clicked and then we just replace the bubble with solid black
+        '''
+        
+        if is_interacting and distance_x > interact_distance and distance_y > interact_distance:
+            window_surface.blit(pygame.Color(0, 0, 0), text_rect)
+        is_interacting=False
 
     # flip display (apply changes)
     pygame.display.flip()
